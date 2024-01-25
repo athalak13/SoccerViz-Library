@@ -58,7 +58,7 @@ Now finally, you can plot the pass network map for both the teams to analyze and
     awayteam_name = 'Spurs'
     plot = plot.pass_network(pass_between_home, pass_between_away, avg_loc_home,avg_loc_away,hometeam_name,awayteam_name)
     
-![test1.png](SoccerWizz%2Ftest1.png)
+![test1.png](SoccerViz%2Ftest1.png)
 
 Plotting Prg Passes
     

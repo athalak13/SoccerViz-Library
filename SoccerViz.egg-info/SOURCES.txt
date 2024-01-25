@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+setup.py
+SoccerViz/__init__.py
+SoccerViz/datafilter.py
+SoccerViz/extract.py
+SoccerViz/plot.py
+SoccerViz.egg-info/PKG-INFO
+SoccerViz.egg-info/SOURCES.txt
+SoccerViz.egg-info/dependency_links.txt
+SoccerViz.egg-info/top_level.txt

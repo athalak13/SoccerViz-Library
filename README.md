@@ -2,7 +2,7 @@ Installation
 
 Use the package manager [pip](pypi.org) to install 
         
-        pip install SoccerViz 0.0.2
+        pip install SoccerViz==0.0.2
 
 Import the necessary Libraries and SoccerViz Package
     
@@ -32,7 +32,7 @@ your liking, below example is given follow it and keep in mind the instructions 
     #Put your USER AGENT in the HEADERS parameter, you can find yours on "https://www.whatismybrowser.com/detect/what-http-headers-is-my-browser-sending"
     
     HEADERS = {
-            "'USER AGENT: #your user agent"
+            'User-Agent': "#your user agent"
         }
 
     #Call the extract functions to get Pass Dataframe and Players Dataframe of the particular match

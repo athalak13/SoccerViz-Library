@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: SoccerViz
-Version: 0.0.2
+Version: 0.1.0
 Summary: A Package to allow analyzing soccer event data easily
 Author: Athal Akbar
 Author-email: athalkhan13@gmail.com
@@ -17,7 +17,7 @@ Installation
 
 Use the package manager [pip](pypi.org) to install 
         
-        pip install SoccerViz 0.0.2
+        pip install SoccerViz==0.1.0
 
 Import the necessary Libraries and SoccerViz Package
     
@@ -42,38 +42,61 @@ your liking, below example is given follow it and keep in mind the instructions 
     
     #This is an example URL from Whoscored.com similar to the below one
     
-    url = 'https://www.whoscored.com/Matches/1729448/Live/England-Premier-League-2023-2024-Manchester-United-Tottenham'  #This is an example URL from Whoscored.com
-    
+    url = 'https://www.whoscored.com/Matches/1729462/Live/England-Premier-League-2023-2024-Arsenal-Liverpool'  #This is an example URL from Whoscored.com
+    url_shots = 'https://api.sofascore.com/api/v1/event/11352376/shotmap'  
+    #This^ is taken from the Sofascore API you can do the same by watching Mckay Johns Tutorial on how to fetch API of shotmaps from Sofascore.
+
     #Put your USER AGENT in the HEADERS parameter, you can find yours on "https://www.whatismybrowser.com/detect/what-http-headers-is-my-browser-sending"
     
     HEADERS = {
-            "'USER AGENT: #your user agent"
+            'User-Agent': "#your user agent"
         }
 
-    #Call the extract functions to get Pass Dataframe and Players Dataframe of the particular match
+    headers_shots = { 'Accept': '*/*',
+    'Sec-Fetch-Site': 'same-site',
+    'Accept-Language': 'en-GB,en;q=0.9',
+    # 'Accept-Encoding': 'gzip, deflate, br',
+    'Sec-Fetch-Mode': 'cors',
+    'Cache-Control': 'max-age=0',
+    'Origin': 'https://www.sofascore.com',
+    'User-Agent': "same user agent used in normal Headers", 
+    'Connection': 'keep-alive',
+    'Referer': 'https://www.sofascore.com/',
+    'Host': 'api.sofascore.com',
+    'Sec-Fetch-Dest': 'empty',
+      }   
+
+    shots = requests.get(url_shots, headers=headers_shots)
+
+    #Call the extract functions to get Pass Dataframe,Players Dataframe of the particular match
+    
     
     df = extract.pass_data(url,HEADERS)
     players_df = extract.player_data(url,HEADERS)
     
     #You can find the TEAM Id's of the clubs on their WhoScored page html tags by clicking on the club logos
     
-    home_team_id=32 #Man Utd Team ID
-    away_team_id=30  #Spurs Team ID
+    home_team_id=13 #Arsenal Team ID
+    away_team_id=26 #Liverpool Team ID
 
 After scrapping the event data and assembling into DataFrames, you will need to filter the data according to the teams and players.
 
     #Filter all the data according to the teams by calling the function into DataFrames(their names are pretty self explanatory)
+
     #You can use and call any dataframe you would like to analyze in raw tables and columns i.e. in a DataFrame form
     pass_between_home, pass_between_away, avg_loc_home, avg_loc_away, passes_home, passes_away,df_prg_home,df_comp_prg_home,df_uncomp_prg_home,df_prg_away,df_comp_prg_away,df_uncomp_prg_away = datafilter.analyze_passes(df, players_df, home_team_id, away_team_id)
+
+    #Same goes for the shots of the match
+    df1_missed,df2_missed,df1_saved,df2_saved,df1_goal,df2_goal,df1_block,df2_block,totalxG1,totalxG2=datafilter.analyze_shots(shots)
+
 
 Now finally, you can plot the pass network map for both the teams to analyze and visualize by calling the function
 
     #Call the function and manually put in the home and away team names
-    hometeam_name = 'Man Utd'
-    awayteam_name = 'Spurs'
+    
     plot = plot.pass_network(pass_between_home, pass_between_away, avg_loc_home,avg_loc_away,hometeam_name,awayteam_name)
     
-![test1.png](SoccerWizz%2Ftest1.png)
+![test1.png](SoccerViz%2Ftest1.png)
 
 Plotting Prg Passes
     
@@ -82,6 +105,13 @@ Plotting Prg Passes
                     awayteam_name)
 ![test.png](SoccerViz%2Ftest.png)
 
+Plotting Shot Maps
+    
+    #Call the function 
+    plot = plot.shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, df1_block, df2_block, home_team_id,
+                 away_team_id, df_clubs, totalxG1, totalxG2)
+    
+![test4.png](SoccerViz%2Ftest4.png)
 
 Credits
 

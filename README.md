@@ -64,6 +64,10 @@ your liking, below example is given follow it and keep in mind the instructions 
     home_team_id=13 #Arsenal Team ID
     away_team_id=26 #Liverpool Team ID
 
+Download the EPL Club data excel file which is present in the repository and assign df_clubs to the file location
+
+    df_clubs = pd.read_excel('#file_local_location')
+
 After scrapping the event data and assembling into DataFrames, you will need to filter the data according to the teams and players.
 
     #Filter all the data according to the teams by calling the function into DataFrames(their names are pretty self explanatory)

@@ -9,15 +9,29 @@ import numpy as np
 
 
 # function to plot the pass network plot
-def pass_network(pass_between_home, pass_between_away, avg_loc_home, avg_loc_away, hometeam_name, awayteam_name):
+def pass_network(pass_between_home, pass_between_away, avg_loc_home, avg_loc_away, home_team_id, away_team_id,df_clubs):
     # Specify the URL or local path to the Oswald font file
     oswald_font_url = "https://raw.githubusercontent.com/google/fonts/main/ofl/oswald/Oswald%5Bwght%5D.ttf"
 
     # Create the FontManager instance
     oswald_regular = FontManager(oswald_font_url)
 
-    TEAM1 = hometeam_name
-    TEAM2 = awayteam_name
+    team1_info = df_clubs[df_clubs['Team ID'] == home_team_id]
+    team2_info = df_clubs[df_clubs['Team ID'] == away_team_id]
+    team1_name = team1_info['Team Name'].values[0]
+    team2_name = team2_info['Team Name'].values[0]
+    team1_home_color = team1_info['Home Color'].values[0]
+    team2_home_color = team2_info['Home Color'].values[0]
+    team2_away_color = team2_info['Away Color'].values[0]
+    team1_color = team1_home_color
+
+    if team1_color == team2_home_color:
+        team2_color = team2_away_color
+    else:
+        team2_color = team2_home_color
+
+
+
 
     # Define your parameters
     MAX_LINE_WIDTH = 500
@@ -63,7 +77,7 @@ def pass_network(pass_between_home, pass_between_away, avg_loc_home, avg_loc_awa
     pass_nodes = pitch.scatter(
         avg_loc_home.x,
         avg_loc_home.y,
-        color="red",
+        color=team1_color,
         edgecolors="black",
         s=avg_loc_home.marker_size,
         linewidth=0.5,
@@ -117,7 +131,7 @@ def pass_network(pass_between_home, pass_between_away, avg_loc_home, avg_loc_awa
     pass_nodes = pitch.scatter(
         avg_loc_away.x,
         avg_loc_away.y,
-        color="blue",
+        color=team2_color,
         edgecolors="black",
         s=avg_loc_away.marker_size,
         linewidth=0.5,
@@ -140,10 +154,10 @@ def pass_network(pass_between_home, pass_between_away, avg_loc_home, avg_loc_awa
         text.set_path_effects([path_effects.withStroke(linewidth=1, foreground="black")])
 
     # Add labels to the pass networks
-    highlight_text = [{'color': 'red', 'fontproperties': oswald_regular.prop},
-                      {'color': 'blue', 'fontproperties': oswald_regular.prop}]
-    ax_text(0.5, 0.7, f"<{TEAM1}> & <{TEAM2}> Pass Networks", fontsize=28, color='#000009',
-            fontproperties=oswald_regular.prop, highlight_textprops=highlight_text,
+    highlight_text = [{'color': team1_color, 'fontname': 'Rockwell'},
+                      {'color': team2_color, 'fontname': 'Rockwell'}]
+    ax_text(0.5, 0.7, f"<{team1_name}> & <{team2_name}> Pass Networks", fontsize=28, color='#000009',
+            fontname='Rockwell', highlight_textprops=highlight_text,
             ha='center', va='center', ax=axs['title'])
     axs["endnote"].text(
         1,
@@ -152,22 +166,36 @@ def pass_network(pass_between_home, pass_between_away, avg_loc_home, avg_loc_awa
         color="black",
         va="center",
         ha="right",
-        fontsize=20,
-        fontproperties=oswald_regular.prop,
+        fontsize=18,
+        fontname= 'Rockwell',
     )
+
     plt.show()
 
 # function to plot the progressive passes of both the teams
-def prg_passes(df_comp_prg_home, df_uncomp_prg_home, df_comp_prg_away, df_uncomp_prg_away, hometeam_name,
-                    awayteam_name):
+def prg_passes(df_comp_prg_home, df_uncomp_prg_home, df_comp_prg_away, df_uncomp_prg_away, home_team_id,away_team_id,df_clubs):
     # Specify the URL or local path to the Oswald font file
     oswald_font_url = "https://raw.githubusercontent.com/google/fonts/main/ofl/oswald/Oswald%5Bwght%5D.ttf"
 
     # Create the FontManager instance
     oswald_regular = FontManager(oswald_font_url)
 
-    TEAM1 = hometeam_name
-    TEAM2 = awayteam_name
+    team1_info = df_clubs[df_clubs['Team ID'] == home_team_id]
+    team2_info = df_clubs[df_clubs['Team ID'] == away_team_id]
+    team1_name = team1_info['Team Name'].values[0]
+    team2_name = team2_info['Team Name'].values[0]
+    team1_home_color = team1_info['Home Color'].values[0]
+    team2_home_color = team2_info['Home Color'].values[0]
+    team2_away_color = team2_info['Away Color'].values[0]
+    team1_color = team1_home_color
+
+    if team1_color == team2_home_color:
+        team2_color = team2_away_color
+    else:
+        team2_color = team2_home_color
+
+    TEAM1 = team1_name
+    TEAM2 = team2_name
     # Set up the pitch
     pitch = Pitch(pitch_type='opta', pitch_color='white', line_color='black')
     fig, axs = pitch.grid(nrows=2, ncols=2, title_height=0.08, endnote_space=0,
@@ -189,11 +217,11 @@ def prg_passes(df_comp_prg_home, df_uncomp_prg_home, df_comp_prg_away, df_uncomp
                 label='unsuccessful passes', alpha=0.35)
     pitch.scatter(df_uncomp_prg_home.endX, df_uncomp_prg_home.endY, color='red', s=100, ax=axs['pitch'][0, 1],
                   alpha=0.5)
-    highlight_text = [{'color': 'green', 'fontproperties': oswald_regular.prop},
-                      {'color': 'red', 'fontproperties': oswald_regular.prop}]
+    highlight_text = [{'color': 'green', 'fontname': 'Rockwell'},
+                      {'color': 'red', 'fontname': 'Rockwell'}]
     ax_text(0.5, 0.7, f"{TEAM1} <Successful> Prg Passes & <Unsuccessful> Prg Passes v. {TEAM2}", fontsize=25,
             color='#000009',
-            fontproperties=oswald_regular.prop, highlight_textprops=highlight_text,
+            fontname='Rockwell', highlight_textprops=highlight_text,
             ha='center', va='center', ax=axs['title'])
 
     pitch.lines(df_comp_prg_away.x, df_comp_prg_away.y,
@@ -206,11 +234,11 @@ def prg_passes(df_comp_prg_home, df_uncomp_prg_home, df_comp_prg_away, df_uncomp
                 label='unsuccessful passes', alpha=0.35)
     pitch.scatter(df_uncomp_prg_away.endX, df_uncomp_prg_away.endY, color='red', s=100, ax=axs['pitch'][1, 1],
                   alpha=0.5)
-    highlight_text = [{'color': 'green', 'fontproperties': oswald_regular.prop},
-                      {'color': 'red', 'fontproperties': oswald_regular.prop}]
+    highlight_text = [{'color': 'green', 'fontname': 'Rockwell'},
+                      {'color': 'red', 'fontname': 'Rockwell'}]
     ax_text(0.5, -5.25, f"{TEAM2} <Successful> Prg Passes & <Unsuccessful> Prg Passes v. {TEAM1}", fontsize=25,
             color='#000009',
-            fontproperties=oswald_regular.prop, highlight_textprops=highlight_text,
+            fontname='Rockwell', highlight_textprops=highlight_text,
             ha='center', va='center', ax=axs['title'])
 
     axs["endnote"].text(
@@ -220,9 +248,88 @@ def prg_passes(df_comp_prg_home, df_uncomp_prg_home, df_comp_prg_away, df_uncomp
         color="black",
         va="center",
         ha="right",
-        fontsize=20,
-        fontproperties=oswald_regular.prop,
+        fontsize=18,
+        fontname='Rockwell',
     )
+
     plt.show()
+
+def shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, df1_block, df2_block, home_team_id,
+                 away_team_id, df_clubs, totalxG1, totalxG2):
+
+        team1_info = df_clubs[df_clubs['Team ID'] == home_team_id]
+        team2_info = df_clubs[df_clubs['Team ID'] == away_team_id]
+        team1_name = team1_info['Team Name'].values[0]
+        team2_name = team2_info['Team Name'].values[0]
+        team1_home_color = team1_info['Home Color'].values[0]
+        team2_home_color = team2_info['Home Color'].values[0]
+        team2_away_color = team2_info['Away Color'].values[0]
+        team1_color = team1_home_color
+
+        if team1_color == team2_home_color:
+            team2_color = team2_away_color
+        else:
+            team2_color = team2_home_color
+
+        pitch = Pitch(pitch_type='opta', pitch_color='white', linewidth=5, spot_scale=0.005)
+        fig, ax = pitch.draw(figsize=(12, 10))
+
+        # Plot the completed passes
+
+        pitch.scatter(df1_missed['playerCoordinates.x'], df1_missed['playerCoordinates.y'], color=team1_color,
+                      s=df1_missed.markersize, ax=ax, alpha=0.5, edgecolors='#383838')
+
+        pitch.scatter(df2_missed['playerCoordinates.x'], df2_missed['playerCoordinates.y'], color=team2_color,
+                      s=df2_missed.markersize, ax=ax, alpha=0.5, edgecolors='#383838')
+
+        pitch.scatter(df1_saved['playerCoordinates.x'], df1_saved['playerCoordinates.y'], color=team1_color,
+                      s=df1_saved.markersize, alpha=0.75, ax=ax, edgecolors='black')
+
+        pitch.scatter(df2_saved['playerCoordinates.x'], df2_saved['playerCoordinates.y'], color=team2_color,
+                      s=df2_saved.markersize, alpha=0.75, ax=ax, edgecolors='black')
+
+        pitch.scatter(df1_goal['playerCoordinates.x'], df1_goal['playerCoordinates.y'], color=team1_color,
+                      s=df1_goal.markersize,
+                      marker='*', ax=ax, edgecolors='black', alpha=0.8)
+
+        pitch.scatter(df2_goal['playerCoordinates.x'], df2_goal['playerCoordinates.y'], color=team2_color,
+                      s=df2_goal.markersize,
+                      marker='*', ax=ax, edgecolors='black', alpha=0.8)
+
+        pitch.scatter(df1_block['playerCoordinates.x'], df1_block['playerCoordinates.y'], color=team1_color,
+                      s=df1_block.markersize, ax=ax, edgecolors='black', alpha=0.8)
+
+        pitch.scatter(df2_block['playerCoordinates.x'], df2_block['playerCoordinates.y'], color=team2_color,
+                      s=df2_block.markersize, ax=ax, edgecolors='black', alpha=0.8)
+
+        pitch.lines(df1_goal['playerCoordinates.x'], df1_goal['playerCoordinates.y'],
+                    df1_goal['goalMouthCoordinates.x'],
+                    df1_goal['goalMouthCoordinates.y'], color=team1_color, comet=True, ax=ax, alpha=0.35)
+        pitch.lines(df2_goal['playerCoordinates.x'], df2_goal['playerCoordinates.y'],
+                    df2_goal['goalMouthCoordinates.x'],
+                    df2_goal['goalMouthCoordinates.y'], color=team2_color, comet=True, ax=ax, alpha=0.35)
+
+        highlight_text = [{'color': 'team1_color', 'fontname': "Rockwell"},
+                          {'color': 'team2_color', 'fontname': "Rockwell"}]
+        ax_text(25, 90, f"<{team1_name}>", size=35, color=team1_color,
+                fontname="Rockwell",
+                ha='center', va='center', ax=ax, weight='bold')
+        ax_text(75, 90, f"<{team2_name}>", size=35, color=team2_color,
+                fontname="Rockwell",
+                ha='center', va='center', ax=ax, weight='bold')
+
+        ax.text(85, 5, "@athalakbar13", size=20, color='#000009',
+                fontname="Rockwell",
+                ha='center', va='center', alpha=0.5)
+        ax.text(50, 103, "xG Shot Map", size=30, color='black',
+                fontname="Rockwell",
+                ha='center', va='center')
+        ax.text(25, 82, f"(Total xG : {totalxG1})", size=20, color=team1_color, alpha=0.85,
+                fontname="Rockwell",
+                ha='center', va='center', weight='bold')
+        ax.text(75, 82, f"(Total xG : {totalxG2})", size=20, color=team2_color, alpha=0.85,
+                fontname="Rockwell",
+                ha='center', va='center', weight='bold')
+        plt.show()
 
 

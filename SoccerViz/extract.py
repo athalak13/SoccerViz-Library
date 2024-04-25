@@ -6,12 +6,12 @@ import requests
 from bs4 import BeautifulSoup
 
 #function to extract passing data
-def pass_data(url,HEADERS):
-    response = requests.get(url)
+def pass_data(url,HEADERS,PROXIES=None):
+    response = requests.get(url, proxies=PROXIES)
     if response.status_code == 200:
         html = BeautifulSoup(response.text, 'html.parser')
     else:
-        response = requests.get(url, headers=HEADERS)
+        response = requests.get(url, headers=HEADERS, proxies=PROXIES)
         html = BeautifulSoup(response.text, 'html.parser')
 
     # Define your regex pattern accurately to match the data you want
@@ -63,12 +63,12 @@ def pass_data(url,HEADERS):
     return df_passes
 
 #function to extract players dataframe
-def player_data(url, HEADERS):
-    response = requests.get(url)
+def player_data(url, HEADERS, PROXIES=None):
+    response = requests.get(url, proxies=PROXIES)
     if response.status_code == 200:
         html = BeautifulSoup(response.text, 'html.parser')
     else:
-        response = requests.get(url, headers=HEADERS)
+        response = requests.get(url, headers=HEADERS, proxies=PROXIES)
         html = BeautifulSoup(response.text, 'html.parser')
 
     # Define your regex pattern accurately to match the data you want

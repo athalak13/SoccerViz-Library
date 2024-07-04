@@ -85,7 +85,7 @@ Plotting Shot Maps
     plot = plot.shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, df1_block, df2_block, home_team_name,
                  away_team_name,totalxG1, totalxG2)
     
-![test4.png](SoccerViz%2Ftest4.png)
+![Test4 .png](SoccerViz%2FScreenshot%202024-07-04%20at%205.50.22%E2%80%AFPM.png)
 
 Credits
 

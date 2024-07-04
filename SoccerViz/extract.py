@@ -69,9 +69,35 @@ def pass_data(url):
 
     return df_passes
 
+
 def player_data(url):
     html = get_html_selenium(url)
     data = extract_data(html)
+
+
+    # Define your regex pattern accurately to match the data you want
+    regex_pattern = r'(?<=require\.config\.params\["args"\].=.)[\s\S]*?;'
+    data_txt = re.findall(regex_pattern, str(html))[0]
+
+    # Clean up the text if necessary
+    data_txt = data_txt.replace('matchId', '"matchId"')
+    data_txt = data_txt.replace('matchCentreData', '"matchCentreData"')
+    data_txt = data_txt.replace('matchCentreEventTypeJson', '"matchCentreEventTypeJson"')
+    data_txt = data_txt.replace('formationIdNameMappings', '"formationIdNameMappings"')
+    data_txt = data_txt.replace('};', '}')
+    data = data_txt
+    data = json.loads(data)
+
+    # Access the JSON data as needed
+    event_types_json = data["matchCentreData"]
+    formation_mappings = data["formationIdNameMappings"]
+    events_dict = data["matchCentreData"]["events"]
+    teams_dict = {
+        data["matchCentreData"]['home']['teamId']: data["matchCentreData"]['home']['name'],
+        data["matchCentreData"]['away']['teamId']: data["matchCentreData"]['away']['name']
+    }
+    players_dict = data["matchCentreData"]["playerIdNameDictionary"]
+
 
     # Create players DataFrame
     players_home_df = pd.DataFrame(data["matchCentreData"]['home']['players'])
@@ -114,4 +140,5 @@ def shots(sofascore_url):
 
     driver.quit()
     return shotmap
+
 

@@ -76,12 +76,9 @@ def analyze_passes(df, players_df, home_team_id, away_team_id):
 
     return pass_between_home, pass_between_away, avg_loc_home, avg_loc_away, passes_home, passes_away, df_prg_home, df_comp_prg_home, df_uncomp_prg_home, df_prg_away, df_comp_prg_away, df_uncomp_prg_away
 
-def analyze_shots(shots):
-
-    shots = shots.json()
-
-    df = pd.json_normalize(shots['shotmap'])
-    player_names = [shot['player']['name'] for shot in shots['shotmap']]
+def analyze_shots(shotmap):
+    df = pd.json_normalize(shotmap)
+    player_names = [shot['player']['name'] for shot in shotmap]
     df_player_names = pd.DataFrame(player_names, columns=['Player Names'])
     merged_df = pd.concat([df, df_player_names], axis=1)
     combined_df = df
@@ -89,8 +86,8 @@ def analyze_shots(shots):
     combined_df['markersize'] = combined_df['xg'] * 800
     combined_df = combined_df.sort_values('time', ascending=True)
 
-    #1 represents Home Team
-    #2 represents Away Team
+    # 1 represents Home Team
+    # 2 represents Away Team
     df1 = combined_df.loc[combined_df['isHome'] == True]
     df2 = combined_df.loc[combined_df['isHome'] == False]
     df1['cum_xg'] = df1['xg'].cumsum()

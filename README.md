@@ -1,9 +1,9 @@
 Installation
 
-Use the package manager [pip](pypi.org) to install 
+## Use the package manager [pip](pypi.org) to install 
 
 
-    pip install SoccerViz==0.3.1
+    pip install SoccerViz==0.3.2
 
 
 Import the necessary Libraries and SoccerViz Package
@@ -14,16 +14,19 @@ Import the necessary Libraries and SoccerViz Package
     import requests
     from bs4 import BeautifulSoup
     import numpy as np
+    import math
+    from scipy import stats
     import matplotlib.pyplot as plt
     from matplotlib.colors import to_rgba
     import matplotlib.patheffects as path_effects
-    from mplsoccer import VerticalPitch, Pitch, FontManager
-    from highlight_text import ax_text
+    from mplsoccer import VerticalPitch, Pitch, FontManager,PyPizza
+    from highlight_text import ax_text,fig_text
     from selenium import webdriver
     from selenium.webdriver.chrome.service import Service
     from selenium.webdriver.chrome.service import Service as ChromeService
     from selenium.webdriver.chrome.options import Options
     from webdriver_manager.chrome import ChromeDriverManager
+
     
     #SoccerViz Package
     from SoccerViz import plot,extract,datafilter
@@ -72,14 +75,14 @@ Now finally, you can plot the pass network map for both the teams to analyze and
     
 ![example.png](SoccerViz%2Fexample.png)
 
-Plotting Prg Passes
+## Plotting Prg Passes
     
     #Call the function and put in home and away team names
     plot = plot.prg_passes(df_comp_prg_home, df_uncomp_prg_home, df_comp_prg_away, df_uncomp_prg_away, home_team_name,
                     away_team_name)
 ![test.png](SoccerViz%2Ftest.png)
 
-Plotting Shot Maps
+## Plotting Shot Maps
     
     #Call the function 
     plot = plot.shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, df1_block, df2_block, home_team_name,
@@ -87,11 +90,40 @@ Plotting Shot Maps
     
 ![Test4 .png](SoccerViz%2FScreenshot%202024-07-04%20at%205.50.22%E2%80%AFPM.png)
 
-Credits
+## Compare Players from the Big 5 EU Leagues 2022-2024 seasons using Pizza Plots 
 
-    Huge Shoutout to the guys at Mplsoccer, do check their package out also, and also checkout Mckay Johns Youtube Channel, which helped me alot in learning python and football analytics
+        First and foremost download the CSV File 'big5stats22-24.csv' *data from FBRef via WorldFootballR
+        #Load the CSV file as DF
+        df = pd.read_csv('/Users/athalkhan/desktop/DATA/big5stats22-24.csv')
+
+The available parameters are:
+        ['Gls', 'Ast', 'G+A', 'xG', 'PrgC', 'PrgP', 'PrgR', 'Shots', 'Shts on Target', 
+        'TklW', 'Blocks', 'Int', 'Succ Takeons', 'Recov', 'Aerial Duels', 'Pass CmpRate', 
+        'LongPass CmpRate', 'KeyPasses', 'PassPA', 'FinalThird Passes', 'CrsPA']
+
+Positions Values should be coherent with these:
+        'DF', 'MF', 'FW', 'GK' 
+
+Example Usage
+
+        position = 'DF'  #specify the position
+        player1 = 'Riccardo Calafiori'  # double-check spellings from FBRef
+        player2 = 'Ben White'  # double-check special characters in player names
+        
+        #specify any parameters from the list above to compare players
+        params = ['G+A', 'PrgC','PrgP', 'TklW','Blocks','Int','LongPass CmpRate','KeyPasses','CrsPA']
+
+        values, values2 = datafilter.compare_players(df, position, player1, player2, params)
+        plot = plot.pizza_plot(values, values2, params, player1, player2)
+![calavzini_plot.png](SoccerViz%2Fcalavzini_plot.png)
+
+
+
+## Credits
+
+Huge Shoutout to the guys at Mplsoccer, do check their package out also, and also checkout Mckay Johns Youtube Channel, which helped me alot in learning python and football analytics
     
-    And please don't forget to drop me feedback on Twitter/X, @athalakbar13.
+And please don't forget to drop me feedback on Twitter/X, @athalakbar13.
 
 Enjoy!!
 

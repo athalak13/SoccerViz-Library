@@ -2,6 +2,8 @@
 import numpy as np
 import pandas as pd
 import json
+import math
+from scipy import stats
 
 
 # function to prep and filter the data extracted
@@ -112,6 +114,51 @@ def analyze_shots(shotmap):
     df2_block = df2.loc[df2['shotType'] == 'block']
 
     return df1_missed,df2_missed,df1_saved,df2_saved,df1_goal,df2_goal,df1_block,df2_block,totalxG1,totalxG2
+
+
+def validate_input(df, position, player1, player2, params):
+    # Check if position exists in the dataframe
+    if position not in df['Pos'].unique():
+        raise ValueError(f"Position {position} does not exist in the dataframe.")
+
+    # Check if both players exist in the dataframe
+    if player1 not in df['Player'].unique():
+        raise ValueError(f"Player {player1} does not exist in the dataframe.")
+    if player2 not in df['Player'].unique():
+        raise ValueError(f"Player {player2} does not exist in the dataframe.")
+
+    # Check if all params exist in the dataframe columns
+    for param in params:
+        if param not in df.columns:
+            raise ValueError(f"Parameter {param} does not exist in the dataframe.")
+
+
+def compare_players(df, position, player1, player2, params):
+    # Validate input parameters before any column manipulation
+    validate_input(df, position, player1, player2, params)
+
+    # Filter the dataframe for the given position and 90s played
+    df_filtered = df.loc[(df['Pos'] == position) & (df['Mins'] >= 1000)]
+
+    # Drop unnecessary columns
+    df_filtered = df_filtered.drop(['Season_End_Year', 'Squad', 'Comp', 'Nation', 'Pos', 'Age',
+                                    'Mins'], axis=1)
+
+    # Get player stats
+    player_data = df_filtered.loc[df_filtered['Player'] == player1].reset_index()
+    player_stats = list(player_data.loc[0, params])
+
+    player2_data = df_filtered.loc[df_filtered['Player'] == player2].reset_index()
+    player2_stats = list(player2_data.loc[0, params])
+
+    # Calculate percentiles
+    values = [math.floor(stats.percentileofscore(df_filtered[param], stat)) for param, stat in
+              zip(params, player_stats)]
+    values2 = [math.floor(stats.percentileofscore(df_filtered[param], stat)) for param, stat in
+               zip(params, player2_stats)]
+
+    return values, values2
+
 
 
 

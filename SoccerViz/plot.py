@@ -1,11 +1,18 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import to_rgba
 import matplotlib.patheffects as path_effects
-from mplsoccer import VerticalPitch, Pitch, FontManager
-from highlight_text import ax_text
+from mplsoccer import VerticalPitch, Pitch, FontManager,PyPizza
+from highlight_text import ax_text,fig_text
 import numpy as np
+import matplotlib.pyplot as plt
 
 
+font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
+                          'src/hinted/Roboto-Regular.ttf')
+font_italic = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
+                          'src/hinted/Roboto-Italic.ttf')
+font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apache/robotoslab/'
+                        'RobotoSlab[wght].ttf')
 
 
 # function to plot the pass network plot
@@ -286,5 +293,79 @@ def shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, d
                 fontname="Rockwell",
                 ha='center', va='center', weight='bold')
         plt.show()
+
+def pizza_plot(values, values2, params, player1, player2):
+    # Instantiate PyPizza class
+    baker = PyPizza(
+        params=params,  # max range values
+        background_color="#222222", straight_line_color="#000000",
+        last_circle_color="#000000", last_circle_lw=2.5, other_circle_lw=0,
+        other_circle_color="#000000", straight_line_lw=1
+    )
+
+    # Plot pizza
+    fig, ax = baker.make_pizza(
+        values,  # list of values
+        compare_values=values2,  # passing comparison values
+        figsize=(8, 8),  # adjust figsize according to your need
+        color_blank_space="same",  # use same color to fill blank space
+        blank_alpha=0.4,  # alpha for blank-space colors
+        param_location=105,  # where the parameters will be added
+        kwargs_slices=dict(
+            facecolor="#1A78CF", edgecolor="#000000",
+            zorder=1, linewidth=1
+        ),  # values to be used when plotting slices
+        kwargs_compare=dict(
+            facecolor="#ff9300", edgecolor="#222222", zorder=3, linewidth=1,
+        ),  # values to be used when plotting comparison slices
+        kwargs_params=dict(
+            color="#F2F2F2", fontsize=12, zorder=5,
+            fontproperties=font_normal.prop, va="center"
+        ),  # values to be used when adding parameter
+        kwargs_values=dict(
+            color="#000000", fontsize=12,
+            fontproperties=font_normal.prop, zorder=3,
+            bbox=dict(
+                edgecolor="#000000", facecolor="#1A78CF",
+                boxstyle="round,pad=0.2", lw=1
+            )
+        ),  # values to be used when adding parameter-values
+        kwargs_compare_values=dict(
+            color="#000000", fontsize=12,
+            fontproperties=font_normal.prop, zorder=3,
+            bbox=dict(
+                edgecolor="#000000", facecolor="#FF9300",
+                boxstyle="round,pad=0.2", lw=1
+            )
+        )  # values to be used when adding comparison-values
+    )
+
+    # Add title
+    fig_text(
+        0.515, 0.99, f"<{player1}> vs <{player2}>",
+        size=16, fig=fig,
+        highlight_textprops=[{"color": '#1A78CF'}, {"color": '#FF9300'}],
+        ha="center", fontproperties=font_bold.prop, color="#F2F2F2"
+    )
+
+    # Add subtitle
+    fig.text(
+        0.515, 0.92,
+        "Percentile Rank v. Top 5 League Defenders 22-24 \n *min 1000mins",
+        size=12,
+        ha="center", fontproperties=font_bold.prop, color="#F2F2F2"
+    )
+
+    # Add credits
+    CREDIT_1 = "data via WorldFootballR from FBref"
+    CREDIT_2 = "@athalakbar13 via mplsoccer"
+
+    fig.text(
+        0.99, 0.005, f"{CREDIT_1}\n{CREDIT_2}", size=9,
+        fontproperties=font_italic.prop, color="#F2F2F2",
+        ha="right"
+    )
+
+    plt.show()
 
 

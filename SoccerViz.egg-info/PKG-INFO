@@ -1,6 +1,6 @@
 Metadata-Version: 2.1
 Name: SoccerViz
-Version: 0.3.2
+Version: 0.5.3
 Summary: A Package to allow analyzing soccer event data easily
 Author: Athal Akbar
 Author-email: athalkhan13@gmail.com
@@ -18,31 +18,11 @@ Installation
 ## Use the package manager [pip](pypi.org) to install 
 
 
-    pip install SoccerViz==0.3.2
+    pip install SoccerViz==0.5.3
 
 
-Import the necessary Libraries and SoccerViz Package
-    
-    import re
-    import json
-    import pandas as pd
-    import requests
-    from bs4 import BeautifulSoup
-    import numpy as np
-    import math
-    from scipy import stats
-    import matplotlib.pyplot as plt
-    from matplotlib.colors import to_rgba
-    import matplotlib.patheffects as path_effects
-    from mplsoccer import VerticalPitch, Pitch, FontManager,PyPizza
-    from highlight_text import ax_text,fig_text
-    from selenium import webdriver
-    from selenium.webdriver.chrome.service import Service
-    from selenium.webdriver.chrome.service import Service as ChromeService
-    from selenium.webdriver.chrome.options import Options
-    from webdriver_manager.chrome import ChromeDriverManager
+Import the SoccerViz Package
 
-    
     #SoccerViz Package
     from SoccerViz import plot,extract,datafilter
 
@@ -131,6 +111,16 @@ Example Usage
         values, values2 = datafilter.compare_players(df, position, player1, player2, params)
         plot = plot.pizza_plot(values, values2, params, player1, player2)
 ![calavzini_plot.png](SoccerViz%2Fcalavzini_plot.png)
+
+## Plot ShotMaps for Individual Players throughout the Season
+
+        playerid="5220" #put the player Id in strings from Understat.com URL
+        season=2023 #season you wish to plot the shotmap of
+        player_name = "Kai Havertz" #player_name
+        
+        plot = plot.playershots(playerid,season,player_name) #Call in the function to plot
+        
+![kai.png](SoccerViz%2Fkai.png)
 
 
 

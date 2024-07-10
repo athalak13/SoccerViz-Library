@@ -1,10 +1,17 @@
 import matplotlib.pyplot as plt
 from matplotlib.colors import to_rgba
 import matplotlib.patheffects as path_effects
-from mplsoccer import VerticalPitch, Pitch, FontManager,PyPizza
+from mplsoccer import VerticalPitch, Pitch, FontManager,PyPizza,create_transparent_cmap,FontManager, arrowhead_marker, Sbopen
 from highlight_text import ax_text,fig_text
 import numpy as np
 import matplotlib.pyplot as plt
+from understatapi import UnderstatClient
+import pandas as pd
+import matplotlib.ticker as ticker
+import matplotlib.patheffects as path_effects
+import numpy as np
+
+
 
 
 font_normal = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/main/'
@@ -13,6 +20,8 @@ font_italic = FontManager('https://raw.githubusercontent.com/googlefonts/roboto/
                           'src/hinted/Roboto-Italic.ttf')
 font_bold = FontManager('https://raw.githubusercontent.com/google/fonts/main/apache/robotoslab/'
                         'RobotoSlab[wght].ttf')
+fm_rubik = FontManager('https://raw.githubusercontent.com/google/fonts/main/ofl/'
+                       'rubikmonoone/RubikMonoOne-Regular.ttf')
 
 
 # function to plot the pass network plot
@@ -367,5 +376,65 @@ def pizza_plot(values, values2, params, player1, player2):
     )
 
     plt.show()
+
+
+def playershots(player_id, season, player_name):
+    with UnderstatClient() as understat:
+        player_shot_data = understat.player(player=player_id).get_shot_data()
+        df = pd.DataFrame(player_shot_data)
+        cols_to_convert = ['id', 'minute', 'Y', 'X', 'xG', 'player_id', 'match_id', 'season']
+
+        df[cols_to_convert] = df[cols_to_convert].astype(float)
+        df['X'] = df['X'] * 100
+        df['Y'] = df['Y'] * 100
+        df = df[df['season'] == season]
+
+        goals = df[df['result'] == 'Goal']
+        shots = df[df['result'] != 'Goal']
+
+        pitch = VerticalPitch(pad_bottom=0.5,  # pitch extends slightly below halfway line
+                              half=True,  # half of a pitch
+                              goal_type='box',
+                              goal_alpha=0.8,
+                              pitch_type='opta',
+                              pitch_color='black',
+                              )  # control the goal transparency
+        fig, ax = pitch.draw(figsize=(12, 10))
+
+        sc = pitch.scatter(shots.X, shots.Y,
+                           # size varies between 100 and 1000 (points squared)
+                           s=(shots.xG * 900) + 100,
+                           c='black',  # color for scatter in hex format
+                           edgecolors='red',  # give the markers a charcoal border
+                           # for other markers types see: https://matplotlib.org/api/markers_api.html
+
+                           ax=ax)
+
+        sc = pitch.scatter(goals.X, goals.Y,
+                           # size varies between 100 and 1000 (points squared)
+                           s=(goals.xG * 900) + 100,
+                           c='red',  # color for scatter in hex format
+                           edgecolors='black',
+                           alpha=0.8,  # give the markers a charcoal border
+                           # for other markers types see: https://matplotlib.org/api/markers_api.html
+
+                           ax=ax)
+
+        txt = ax.text(x=50, y=70, s=f"{player_name} Shots",
+                      size=30,
+                      # here i am using a downloaded font from google fonts instead of passing a fontdict
+                      fontproperties=fm_rubik.prop, color=pitch.line_color,
+                      va='center', ha='center')
+        txt = ax.text(x=50, y=68, s=f" in {season}",
+                      size=20,
+                      # here i am using a downloaded font from google fonts instead of passing a fontdict
+                      fontproperties=fm_rubik.prop, color=pitch.line_color,
+                      va='center', ha='center')
+        txt = ax.text(x=15, y=55, s='SoccerViz',
+                      size=10,
+                      # here i am using a downloaded font from google fonts instead of passing a fontdict
+                      fontproperties=fm_rubik.prop, color=pitch.line_color,
+                      va='center', ha='center')
+
 
 

@@ -3,7 +3,7 @@ import setuptools
 
 setuptools.setup(
     name="SoccerViz",
-    version="0.3.2",
+    version="0.5.3",
     description="A Package to allow analyzing soccer event data easily",
     long_description = pathlib.Path("README.md").read_text(),
     long_description_content_type="text/markdown",

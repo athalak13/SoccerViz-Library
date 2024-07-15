@@ -171,7 +171,7 @@ def pass_network(pass_between_home, pass_between_away, avg_loc_home, avg_loc_awa
     )
 
     plt.show()
-
+    return fig
 # function to plot the progressive passes of both the teams
 def prg_passes(df_comp_prg_home,df_uncomp_prg_home, df_comp_prg_away, df_uncomp_prg_away, home_team_name,away_team_name):
     # Specify the URL or local path to the Oswald font file
@@ -237,6 +237,7 @@ def prg_passes(df_comp_prg_home,df_uncomp_prg_home, df_comp_prg_away, df_uncomp_
     )
 
     plt.show()
+    return fig
 
 def shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, df1_block, df2_block, home_team_name,
                  away_team_name,totalxG1,totalxG2):
@@ -302,7 +303,7 @@ def shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, d
                 fontname="Rockwell",
                 ha='center', va='center', weight='bold')
         plt.show()
-
+        return fig
 def pizza_plot(values, values2, params, player1, player2):
     # Instantiate PyPizza class
     baker = PyPizza(
@@ -360,7 +361,7 @@ def pizza_plot(values, values2, params, player1, player2):
     # Add subtitle
     fig.text(
         0.515, 0.92,
-        "Percentile Rank v. Top 5 League Defenders 22-24 \n *min 1000mins",
+        "Percentile Rank v. Top 5 League Players 22-24 \n *min 1000mins",
         size=12,
         ha="center", fontproperties=font_bold.prop, color="#F2F2F2"
     )
@@ -376,7 +377,7 @@ def pizza_plot(values, values2, params, player1, player2):
     )
 
     plt.show()
-
+    return fig
 
 def playershots(player_id, season, player_name):
     with UnderstatClient() as understat:
@@ -435,6 +436,7 @@ def playershots(player_id, season, player_name):
                       # here i am using a downloaded font from google fonts instead of passing a fontdict
                       fontproperties=fm_rubik.prop, color=pitch.line_color,
                       va='center', ha='center')
-
+        plt.show()
+        return fig
 
 

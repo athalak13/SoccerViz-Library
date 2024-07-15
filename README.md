@@ -3,7 +3,7 @@ Installation
 ## Use the package manager [pip](pypi.org) to install 
 
 
-    pip install SoccerViz==0.5.3
+    pip install SoccerViz==0.5.4
 
 
 Import the SoccerViz Package

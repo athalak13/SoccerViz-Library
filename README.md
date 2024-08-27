@@ -3,7 +3,7 @@ Installation
 ## Use the package manager [pip](pypi.org) to install 
 
 
-    pip install SoccerViz==0.5.4
+    pip install SoccerViz==0.6.0
 
 
 Import the SoccerViz Package
@@ -17,8 +17,8 @@ your liking, below example is given follow it and keep in mind the instructions 
     
     #This is an example URL from Whoscored.com similar to the below one
     
-    url = 'https://www.whoscored.com/Matches/1829438/Live/International-European-Championship-2024-Austria-Turkiye'  #This is an example URL from Whoscored.com
-    sofascore_url = "https://www.sofascore.com/austria-turkey/aUbstUb#id:11874025"  #This is taken from the Sofascore Statistics Tab
+    url = 'https://www.whoscored.com/Matches/1821060/Live/England-Premier-League-2024-2025-Aston-Villa-Arsenal'  #This is an example URL from Whoscored.com
+    understat_url = 'https://understat.com/match/26618'  #Copy Link of the Understat URL
 
 
     #Call the extract functions to get Pass Dataframe,Players Dataframe of the particular match
@@ -26,14 +26,14 @@ your liking, below example is given follow it and keep in mind the instructions 
     
     df = extract.pass_data(url)
     players_df = extract.player_data(url)
-    shotmap = extract.shots(sofascore_url)
+    home_df,away_df = extract.shots(understat_url)
     
     #You can find the TEAM Id's of the clubs on their WhoScored page html tags by clicking on the club logos
     
-    home_team_id=324 #Austria Team ID
-    away_team_id=333 #Turkey Team ID
-    home_team_name = 'Austria'
-    away_team_name = 'Turkey'
+    home_team_id=24 #Arsenal Team ID
+    away_team_id=13 #Aston Villa Team ID
+    home_team_name = 'Arsenal'
+    away_team_name = 'Aston Villa'
 
 
 After scrapping the event data and assembling into DataFrames, you will need to filter the data according to the teams and players.
@@ -44,23 +44,24 @@ After scrapping the event data and assembling into DataFrames, you will need to 
     pass_between_home, pass_between_away, avg_loc_home, avg_loc_away, passes_home, passes_away,df_prg_home,df_comp_prg_home,df_uncomp_prg_home,df_prg_away,df_comp_prg_away,df_uncomp_prg_away = datafilter.analyze_passes(df, players_df, home_team_id, away_team_id)
 
     #Same goes for the shots of the match
-    df1_missed,df2_missed,df1_saved,df2_saved,df1_goal,df2_goal,df1_block,df2_block,totalxG1,totalxG2=datafilter.analyze_shots(shotmap)
+    df1_missed,df2_missed,df1_saved,df2_saved,df1_goal,df2_goal,df1_block,df2_block,totalxG1,totalxG2=datafilter.analyze_shots(home_df,away_df)
 
 
 Now finally, you can plot the pass network map for both the teams to analyze and visualize by calling the function
-
+## Plotting Pass Network
     #Call the function and manually put in the home and away team names
     
     plot = plot.pass_network(pass_between_home, pass_between_away, avg_loc_home,avg_loc_away,home_team_name,away_team_name)
     
-![example.png](SoccerViz%2Fexample.png)
+![passmap.png](SoccerViz%2Fpassmap.png)
 
 ## Plotting Prg Passes
     
     #Call the function and put in home and away team names
     plot = plot.prg_passes(df_comp_prg_home, df_uncomp_prg_home, df_comp_prg_away, df_uncomp_prg_away, home_team_name,
                     away_team_name)
-![test.png](SoccerViz%2Ftest.png)
+![prgpassmap.png](SoccerViz%2Fprgpassmap.png)
+
 
 ## Plotting Shot Maps
     
@@ -68,13 +69,15 @@ Now finally, you can plot the pass network map for both the teams to analyze and
     plot = plot.shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, df1_block, df2_block, home_team_name,
                  away_team_name,totalxG1, totalxG2)
     
-![Test4 .png](SoccerViz%2FScreenshot%202024-07-04%20at%205.50.22%E2%80%AFPM.png)
+![shotmap.png](SoccerViz%2Fshotmap.png)
+
 
 ## Compare Players from the Big 5 EU Leagues 2022-2024 seasons using Pizza Plots 
 
         First and foremost download the CSV File 'big5stats22-24.csv' *data from FBRef via WorldFootballR
+        Or you can download from the GitHub>DATA
         #Load the CSV file as DF
-        df = pd.read_csv('/Users/athalkhan/desktop/DATA/big5stats22-24.csv')
+        df = pd.read_csv('#filepath')
 
 The available parameters are:
         ['Gls', 'Ast', 'G+A', 'xG', 'PrgC', 'PrgP', 'PrgR', 'Shots', 'Shts on Target', 

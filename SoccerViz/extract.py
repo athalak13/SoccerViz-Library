@@ -2,6 +2,8 @@
 import re
 import json
 import pandas as pd
+import requests
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -11,15 +13,17 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 
 
 def get_html_selenium(url):
-    options = Options()
+    options = webdriver.ChromeOptions()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
     options.add_argument('--disable-gpu')
-    options.add_argument('user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15')
+    options.add_argument(
+        'user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15')
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    driver = webdriver.Chrome(options=options)
     driver.get(url)
+
     html = driver.page_source
     driver.quit()
     return html
@@ -109,36 +113,19 @@ def player_data(url):
     return players_df
 
 
-def shots(sofascore_url):
-    options = webdriver.ChromeOptions()
-    options.set_capability('goog:loggingPrefs', {"performance": "ALL", "browser": "ALL"})
-    driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-    driver.set_page_load_timeout(10)
+def shots(understat_url):
+    response = requests.get(understat_url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    ugly_soup = str(soup)
+    match = re.search("var shotsData .*= JSON.parse\('(.*)'\)",
+                      ugly_soup)
+    shots_data = match.group(1)
+    shots_data = json.loads(
+        shots_data.encode('utf-8').decode('unicode_escape'))
+    home_df = pd.DataFrame(shots_data['h'])
+    away_df = pd.DataFrame(shots_data['a'])
 
-    try:
-        driver.get(sofascore_url)
-    except Exception as e:
-        print(f"Error occurred while loading the page: {e}")
-        driver.quit()
-        return None
 
-    driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-    logs_raw = driver.get_log("performance")
-    logs = [json.loads(lr['message'])['message'] for lr in logs_raw]
-
-    shotmap = None
-    for x in logs:
-        if 'shotmap' in x['params'].get('headers', {}).get(':path', ''):
-            try:
-                response_body = driver.execute_cdp_cmd('Network.getResponseBody',
-                                                       {'requestId': x["params"]["requestId"]})
-                shotmap = json.loads(response_body['body'])['shotmap']
-                break
-            except Exception as e:
-                print(f"Error occurred while extracting shotmap: {e}")
-                break
-
-    driver.quit()
-    return shotmap
+    return home_df,away_df
 
 

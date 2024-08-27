@@ -220,7 +220,7 @@ def prg_passes(df_comp_prg_home,df_uncomp_prg_home, df_comp_prg_away, df_uncomp_
                   alpha=0.5)
     highlight_text = [{'color': 'green', 'fontname': 'Rockwell'},
                       {'color': 'red', 'fontname': 'Rockwell'}]
-    ax_text(0.5, -5.25, f"{home_team_name} <Successful> Prg Passes & <Unsuccessful> Prg Passes v. {away_team_name}", fontsize=25,
+    ax_text(0.5, -5.25, f"{away_team_name} <Successful> Prg Passes & <Unsuccessful> Prg Passes v. {home_team_name}", fontsize=25,
             color='#000009',
             fontname='Rockwell', highlight_textprops=highlight_text,
             ha='center', va='center', ax=axs['title'])
@@ -239,71 +239,64 @@ def prg_passes(df_comp_prg_home,df_uncomp_prg_home, df_comp_prg_away, df_uncomp_
     plt.show()
     return fig
 
+
 def shot_map(df1_missed, df2_missed, df1_saved, df2_saved, df1_goal, df2_goal, df1_block, df2_block, home_team_name,
-                 away_team_name,totalxG1,totalxG2):
+             away_team_name, totalxG1, totalxG2):
+    pitch = Pitch(pitch_type='opta', pitch_color='white', linewidth=5, spot_scale=0.005)
+    fig, ax = pitch.draw(figsize=(12, 10))
 
+    # Plot the completed passes
 
-        pitch = Pitch(pitch_type='opta', pitch_color='white', linewidth=5, spot_scale=0.005)
-        fig, ax = pitch.draw(figsize=(12, 10))
+    pitch.scatter(df1_missed['X'], df1_missed['Y'], color="red",
+                  s=df1_missed.markersize, ax=ax, alpha=0.5, edgecolors='#383838')
 
-        # Plot the completed passes
+    pitch.scatter(df2_missed['X'], df2_missed['Y'], color="blue",
+                  s=df2_missed.markersize, ax=ax, alpha=0.5, edgecolors='#383838')
 
-        pitch.scatter(df1_missed['playerCoordinates.x'], df1_missed['playerCoordinates.y'], color="red",
-                      s=df1_missed.markersize, ax=ax, alpha=0.5, edgecolors='#383838')
+    pitch.scatter(df1_saved['X'], df1_saved['Y'], color="red",
+                  s=df1_saved.markersize, alpha=0.75, ax=ax, edgecolors='black')
 
-        pitch.scatter(df2_missed['playerCoordinates.x'], df2_missed['playerCoordinates.y'], color="blue",
-                      s=df2_missed.markersize, ax=ax, alpha=0.5, edgecolors='#383838')
+    pitch.scatter(df2_saved['X'], df2_saved['Y'], color="blue",
+                  s=df2_saved.markersize, alpha=0.75, ax=ax, edgecolors='black')
 
-        pitch.scatter(df1_saved['playerCoordinates.x'], df1_saved['playerCoordinates.y'], color="red",
-                      s=df1_saved.markersize, alpha=0.75, ax=ax, edgecolors='black')
+    pitch.scatter(df1_goal['X'], df1_goal['Y'], color="red",
+                  s=df1_goal.markersize,
+                  marker='*', ax=ax, edgecolors='black', alpha=0.8)
 
-        pitch.scatter(df2_saved['playerCoordinates.x'], df2_saved['playerCoordinates.y'], color="blue",
-                      s=df2_saved.markersize, alpha=0.75, ax=ax, edgecolors='black')
+    pitch.scatter(df2_goal['X'], df2_goal['Y'], color="blue",
+                  s=df2_goal.markersize,
+                  marker='*', ax=ax, edgecolors='black', alpha=0.8)
 
-        pitch.scatter(df1_goal['playerCoordinates.x'], df1_goal['playerCoordinates.y'], color="red",
-                      s=df1_goal.markersize,
-                      marker='*', ax=ax, edgecolors='black', alpha=0.8)
+    pitch.scatter(df1_block['X'], df1_block['Y'], color="red",
+                  s=df1_block.markersize, ax=ax, edgecolors='black', alpha=0.8)
 
-        pitch.scatter(df2_goal['playerCoordinates.x'], df2_goal['playerCoordinates.y'], color="blue",
-                      s=df2_goal.markersize,
-                      marker='*', ax=ax, edgecolors='black', alpha=0.8)
+    pitch.scatter(df2_block['X'], df2_block['Y'], color="blue",
+                  s=df2_block.markersize, ax=ax, edgecolors='black', alpha=0.8)
 
-        pitch.scatter(df1_block['playerCoordinates.x'], df1_block['playerCoordinates.y'], color="red",
-                      s=df1_block.markersize, ax=ax, edgecolors='black', alpha=0.8)
+    highlight_text = [{'color': 'red', 'fontname': "Rockwell"},
+                      {'color': 'blue', 'fontname': "Rockwell"}]
+    ax_text(25, 90, f"<{home_team_name}>", size=35, color="red",
+            fontname="Rockwell",
+            ha='center', va='center', ax=ax, weight='bold')
+    ax_text(75, 90, f"<{away_team_name}>", size=35, color="blue",
+            fontname="Rockwell",
+            ha='center', va='center', ax=ax, weight='bold')
 
-        pitch.scatter(df2_block['playerCoordinates.x'], df2_block['playerCoordinates.y'], color="blue",
-                      s=df2_block.markersize, ax=ax, edgecolors='black', alpha=0.8)
+    ax.text(85, 5, "@athalakbar13", size=20, color='#000009',
+            fontname="Rockwell",
+            ha='center', va='center', alpha=0.5)
+    ax.text(50, 103, "xG Shot Map", size=30, color='black',
+            fontname="Rockwell",
+            ha='center', va='center')
+    ax.text(25, 82, f"(Total xG : {totalxG1})", size=20, color="red", alpha=0.85,
+            fontname="Rockwell",
+            ha='center', va='center', weight='bold')
+    ax.text(75, 82, f"(Total xG : {totalxG2})", size=20, color="blue", alpha=0.85,
+            fontname="Rockwell",
+            ha='center', va='center', weight='bold')
+    plt.show()
+    return fig
 
-        pitch.lines(df1_goal['playerCoordinates.x'], df1_goal['playerCoordinates.y'],
-                    df1_goal['goalMouthCoordinates.x'],
-                    df1_goal['goalMouthCoordinates.y'], color="red", comet=True, ax=ax, alpha=0.35)
-        pitch.lines(df2_goal['playerCoordinates.x'], df2_goal['playerCoordinates.y'],
-                    df2_goal['goalMouthCoordinates.x'],
-                    df2_goal['goalMouthCoordinates.y'], color="blue", comet=True, ax=ax, alpha=0.35)
-
-        highlight_text = [{'color': 'red', 'fontname': "Rockwell"},
-                          {'color': 'blue', 'fontname': "Rockwell"}]
-        ax_text(25, 90, f"<{home_team_name}>", size=35, color="red",
-                fontname="Rockwell",
-                ha='center', va='center', ax=ax, weight='bold')
-        ax_text(75, 90, f"<{away_team_name}>", size=35, color="blue",
-                fontname="Rockwell",
-                ha='center', va='center', ax=ax, weight='bold')
-
-        ax.text(85, 5, "@athalakbar13", size=20, color='#000009',
-                fontname="Rockwell",
-                ha='center', va='center', alpha=0.5)
-        ax.text(50, 103, "xG Shot Map", size=30, color='black',
-                fontname="Rockwell",
-                ha='center', va='center')
-        ax.text(25, 82, f"(Total xG : {totalxG1})", size=20, color="red", alpha=0.85,
-                fontname="Rockwell",
-                ha='center', va='center', weight='bold')
-        ax.text(75, 82, f"(Total xG : {totalxG2})", size=20, color="blue", alpha=0.85,
-                fontname="Rockwell",
-                ha='center', va='center', weight='bold')
-        plt.show()
-        return fig
 def pizza_plot(values, values2, params, player1, player2):
     # Instantiate PyPizza class
     baker = PyPizza(

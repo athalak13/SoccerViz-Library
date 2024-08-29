@@ -31,17 +31,23 @@ Please do get in touch with me on my [X](https:///www.x.com/athalakbar13) (forme
 ## **Inspiration & Credits**
 
 [Mckay Johns](https://x.com/mckayjohns)
+
 [MPL-Soccer Dev](https://x.com/mplsoccer_dev)
+
 [David Sumpter](https://x.com/Soccermatics)
+
 [Liam Henshaw](https://x.com/HenshawAnalysis)
+
 [Ben Griffins]()
+
 [Scott Willis](https://x.com/scottjwillis)
+
 [Paddy at Attacking Football](https://x.com/OddsOnFPL)
 
 ## **Contents**
 
 - Pass Network Map
-- Progressive Pass Maps
-- ShotMaps
-- Player Comparisons
+- [Progressive Pass Maps](https://athalak13.github.io/SoccerViz-Library/Pass%20Network%20Map/)
+- [ShotMaps](https://athalak13.github.io/SoccerViz-Library/Shot%20Map/)
+- [Progressive Pass Maps](https://athalak13.github.io/SoccerViz-Library/Progressive%20Pass%20Map/)
 

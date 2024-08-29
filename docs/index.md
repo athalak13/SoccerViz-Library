@@ -46,8 +46,7 @@ Please do get in touch with me on my [X](https:///www.x.com/athalakbar13) (forme
 
 ## **Contents**
 
-- Pass Network Map
-- [Progressive Pass Maps](https://athalak13.github.io/SoccerViz-Library/Pass%20Network%20Map/)
+- [Pass Network Maps](https://athalak13.github.io/SoccerViz-Library/Pass%20Network%20Map/)
 - [ShotMaps](https://athalak13.github.io/SoccerViz-Library/Shot%20Map/)
 - [Progressive Pass Maps](https://athalak13.github.io/SoccerViz-Library/Progressive%20Pass%20Map/)
 

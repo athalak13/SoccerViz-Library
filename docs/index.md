@@ -1,6 +1,6 @@
 #  **Welcome to SoccerViz**
 
-### SoccerViz is a one-stop open-source Python library capable of extracting,manipulating & plotting data making it easier for soccer fans & analysts to gain insight beyond the goals
+**SoccerViz is a one-stop open-source Python library capable of extracting,manipulating & plotting data making it easier for soccer fans & analysts to gain insight beyond the goals**
 
 ## **Quick Start Guide**
 
@@ -8,11 +8,11 @@ Use the package manager [pip](https://pypi.org) to install the package
     
     'pip install SoccerViz'
 
-#### The package has three modules, each of which is attributed it's own functions, these three modules are:
+**The package has three modules, each of which is attributed it's own functions, these three modules are:
 
-#### - Extract : This module is responsible for extracting data from websites such as WhoScored and Understat granting access to data for users
-#### - DataFilter : This module then filters & manipulates data which can be then plotted or simply analyzed by the user
-#### - Plot : This module plots the filtered data 
+ - Extract : This module is responsible for extracting data from websites such as WhoScored and Understat granting access to data for users
+ - DataFilter : This module then filters & manipulates data which can be then plotted or simply analyzed by the user
+ - Plot : This module plots the filtered data** 
 
 ## Example of a PassNetwork plotted through SoccerViz
 

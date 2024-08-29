@@ -11,7 +11,7 @@ A pass network map in soccer provides several benefits:
 
 -**Analyzes Ball Movement**: Reveals how the ball moves through different areas, helping identify strengths, weaknesses, and tactical preferences.
 
-### **Here's how you can plot Pass Networks of ANY game recorded on _[WhoScored.com](https://www.whoscored.com)_with a few lines of code**
+**Here's how you can plot Pass Networks of ANY game recorded on _[WhoScored.com](https://www.whoscored.com)_with a few lines of code**
 
 Import the SoccerViz Package & Extract the "Pass" Event Data
 

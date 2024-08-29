@@ -8,7 +8,7 @@
 
 -**Identifies Weaknesses**: Reveals areas where a team or player might struggle to generate quality chances or convert them.
 
-### **Here's how you can plot ShotMaps of ANY game recorded on _[understat.com](https://www.understat.com)_ with a few lines of code**
+ ****Here's how you can plot ShotMaps of ANY game recorded on _[understat.com](https://www.understat.com)_ with a few lines of code****
 
 Import the SoccerViz Package & Extract "Shot" Event Data
 
